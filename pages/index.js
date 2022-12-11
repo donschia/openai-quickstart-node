@@ -4,20 +4,30 @@ import styles from "./index.module.css";
 
 export default function Home() {
   const [animalInput, setAnimalInput] = useState("");
+  const [temperatureInput, setTemperatureInput] = useState(0.6);
   const [result, setResult] = useState();
 
   async function onSubmit(event) {
     event.preventDefault();
+    const request = JSON.stringify({
+      animal: animalInput,
+      temperature: temperatureInput,
+    });
+    console.log(request);
+
     const response = await fetch("/api/generate", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ animal: animalInput }),
+      body: request,
     });
+
     const data = await response.json();
     setResult(data.result);
-    setAnimalInput("");
+    // reset values ?
+    //setAnimalInput("");
+    //setTemperatureInput(0.6);
   }
 
   return (
@@ -38,6 +48,18 @@ export default function Home() {
             value={animalInput}
             onChange={(e) => setAnimalInput(e.target.value)}
           />
+          <input
+            type="range"
+            name="temperature"
+            min="0.0"
+            max="1.0"
+            step="0.1"
+            placeholder="Pick a temperature"
+            aria-label="Pick a temperature"
+            value={temperatureInput}
+            onChange={(e) => setTemperatureInput(Number(e.target.value))}
+          />
+          {temperatureInput}
           <input type="submit" value="Generate names" />
         </form>
         <div className={styles.result}>{result}</div>
