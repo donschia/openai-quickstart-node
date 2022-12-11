@@ -6,13 +6,20 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 export default async function (req, res) {
-  //console.log(req.body);
-  const completion = await openai.createCompletion({
-    model: "text-davinci-002",
-    prompt: generatePrompt(req.body.animal),
-    temperature: req.body.temperature ?? 0.6,
-  });
-  res.status(200).json({ result: completion.data.choices[0].text });
+  const prompt = generatePrompt(req.body.animal);
+  try {
+    const completion = await openai.createCompletion({
+      model: "text-davinci-002",
+      prompt: prompt,
+      temperature: req.body.temperature ?? 0.6,
+    });
+
+    res.status(200).json({ result: completion.data.choices[0].text });
+  } catch (exception) {
+    console.log(exception);
+  }
+
+  console.log({ body: req.body, prompt: prompt, config: configuration });
 }
 
 function generatePrompt(animal) {
