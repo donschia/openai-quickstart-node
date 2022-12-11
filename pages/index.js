@@ -4,6 +4,7 @@ import styles from "./index.module.css";
 
 export default function Home() {
   const [animalInput, setAnimalInput] = useState("");
+  // Added option to change the Temperature
   const [temperatureInput, setTemperatureInput] = useState(0.6);
   const [result, setResult] = useState();
 
